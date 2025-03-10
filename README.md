@@ -74,7 +74,7 @@ elif response.status_code == 404:
     print(f"Error: {error}")
 ```
 
-### Request
+### Currency Conversions
 Request to convert a currency amount
 - **Method:** `POST`
 - **Endpoint:** `/currency`
