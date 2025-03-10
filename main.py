@@ -4,7 +4,6 @@ import requests
 import json
 
 app = FastAPI(title="Unit Conversion")
-# fastapi run main.py
 
 # Define conversion rates for each weight unit
 weight_conversion_rates = {
@@ -17,7 +16,6 @@ weight_conversion_rates = {
     'st': {'kg': 6.35029, 'lbs': 14, 'g': 6350.29, 'oz': 224, 'mg': 6_350_290, 'tonne': 0.00635029}
 }
 
-
 # Define conversion rates for each length unit
 length_conversion_rates = {
     'cm': {'in': 0.393701, 'm': 0.01, 'mm': 10, 'yd': 0.0109361, 'ft': 0.0328084, 'mi': 6.2137e-6, 'km': 0.00001, 'µm': 10_000, 'nm': 10_000_000},
@@ -26,12 +24,11 @@ length_conversion_rates = {
     'mm': {'cm': 0.1, 'in': 0.0393701, 'm': 0.001, 'yd': 0.00109361, 'ft': 0.00328084, 'mi': 6.2137e-7, 'km': 1e-6, 'µm': 1000, 'nm': 1_000_000},
     'yd': {'cm': 91.44, 'in': 36, 'm': 0.9144, 'mm': 914.4, 'ft': 3, 'mi': 0.000568182, 'km': 0.0009144, 'µm': 914_400, 'nm': 914_400_000},
     'ft': {'cm': 30.48, 'in': 12, 'm': 0.3048, 'mm': 304.8, 'yd': 0.333333, 'mi': 0.000189394, 'km': 0.0003048, 'µm': 304_800, 'nm': 304_800_000},
-    'mi': {'cm': 160_934, 'in': 63_360, 'm': 1609.34, 'mm': 1_609_344, 'yd': 1760, 'ft': 5280, 'km': 1.60934, 'µm': 1.609e+9, 'nm': 1.609e+12},
-    'km': {'cm': 100_000, 'in': 39_370.1, 'm': 1000, 'mm': 1_000_000, 'yd': 1093.61, 'ft': 3280.84, 'mi': 0.621371, 'µm': 1_000_000_000, 'nm': 1e+12},
+    'mi': {'cm': 160934, 'in': 63360, 'm': 1609.34, 'mm': 1.609e+6, 'yd': 1760, 'ft': 5280, 'km': 1.60934, 'µm': 1.609e+9, 'nm': 1.609e+12},
+    'km': {'cm': 100_000, 'in': 39_370.1, 'm': 1000, 'mm': 1_000_000, 'yd': 1093.61, 'ft': 3280.84, 'mi': 0.621371, 'µm': 1e+9, 'nm': 1e+12},
     'µm': {'cm': 0.0001, 'in': 3.937e-5, 'm': 1e-6, 'mm': 0.001, 'yd': 1.0936e-6, 'ft': 3.2808e-6, 'mi': 6.2137e-10, 'km': 1e-9, 'nm': 1000},
-    'nm': {'cm': 1e-7, 'in': 3.937e-8, 'm': 1e-9, 'mm': 1e-6, 'yd': 1.0936e-9, 'ft': 3.2808e-9, 'mi': 6.2137e-13, 'km': 1e-12, 'µm': 0.001}
+    'nm': {'cm': 1e-7, 'in': 3.937e-8, 'm': 1e-9, 'mm': 1e-6, 'yd': 1.0936e-9, 'ft': 3.2808e-9, 'mi': 6.2137e-13, 'km': 1e-12, 'µm': 0.001},
 }
-
 
 class CurrencyConversionRequest(BaseModel):
     source_unit: str
@@ -47,6 +44,14 @@ class LengthConversionRequest(BaseModel):
     source_unit: str
     target_unit: str
     amount: float
+
+@app.get("/supported-units", status_code=status.HTTP_200_OK)
+def get_supported_units():
+    return {
+        "weight_units": list(weight_conversion_rates.keys()),
+        "length_units": list(length_conversion_rates.keys()),
+        "currency_units": "Refer to https://www.exchangerate-api.com/"
+    }
 
 @app.post("/currency", status_code=status.HTTP_200_OK)
 async def unit_conversion(request: CurrencyConversionRequest) -> float:

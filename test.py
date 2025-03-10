@@ -35,3 +35,16 @@ elif response.status_code == 404:
     json_data = json.loads(response.text)
     error = json_data["detail"]
     print(f"Error: {error}")
+
+print("")
+response = requests.get(f"{BASE_URL}/supported-units")
+print("Get response status: " + str(response.status_code))
+if response.status_code == 200:
+    result = response.json()
+    print(f"Response: {result}")
+    print(f"Weight Units: {result["weight_units"]}")
+    print(f"Length Units: {result["length_units"]}")
+elif response.status_code == 404: 
+    json_data = json.loads(response.text)
+    error = json_data["detail"]
+    print(f"Error: {error}")
