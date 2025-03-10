@@ -4,7 +4,6 @@ import requests
 import json
 
 app = FastAPI(title="Unit Conversion")
-# fastapi run main.py
 
 # Define conversion rates for each weight unit
 weight_conversion_rates = {
